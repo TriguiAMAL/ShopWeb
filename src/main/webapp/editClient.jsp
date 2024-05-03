@@ -5,8 +5,9 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Edit Client</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="js/bootstrap.min.js"></script>
 
-<link href="chemin/vers/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
