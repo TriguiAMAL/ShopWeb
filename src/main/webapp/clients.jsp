@@ -228,7 +228,7 @@ body {
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "yes delete it !"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = "ClientController?action=delete&cin=" + cin;

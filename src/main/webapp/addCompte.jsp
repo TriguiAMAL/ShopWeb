@@ -125,52 +125,82 @@ body {
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-		document
-				.getElementById('addCompteLink')
-				.addEventListener(
-						'click',
-						function(event) {
-							event.preventDefault();
-							document.getElementById('addCompteFormContainer').style.display = 'block';
-						});
-	</script>
+        document
+                .getElementById('addCompteLink')
+                .addEventListener(
+                        'click',
+                        function(event) {
+                            event.preventDefault();
+                            document.getElementById('addCompteFormContainer').style.display = 'block';
+                        });
+    </script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
 
-			var addCompteLink = document.getElementById('addCompteLink');
+            var addCompteLink = document.getElementById('addCompteLink');
 
-			addCompteLink.click();
-		});
-	</script>
+            addCompteLink.click();
+        });
+    </script>
 
 	<script>
-		function fetchClients(cin) {
-			if (cin.length === 0) {
-				return;
-			}
-			var xhr = new XMLHttpRequest();
-			xhr.open('GET', 'CompteController?action=suggestClients&cin='
-					+ encodeURIComponent(cin), true);
-			xhr.onload = function() {
-				if (xhr.status === 200) {
-					var clients = JSON.parse(xhr.responseText);
-					var options = '';
-					clients.forEach(function(client) {
-						options += '<div onclick="selectClient(\'' + client.cin
-								+ '\')">' + client.cin + ' - ' + client.nom
-								+ ' ' + client.prenom + '</div>';
-					});
-					document.getElementById('clientNames').innerHTML = options;
-				}
-			};
-			xhr.send();
-		}
+        function fetchClients(cin) {
+            if (cin.length === 0) {
+                return;
+            }
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'CompteController?action=suggestClients&cin='
+                    + encodeURIComponent(cin), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var clients = JSON.parse(xhr.responseText);
+                    var options = '';
+                    clients.forEach(function(client) {
+                        options += '<div onclick="selectClient(\'' + client.cin
+                                + '\')">' + client.cin + ' - ' + client.nom
+                                + ' ' + client.prenom + '</div>';
+                    });
+                    document.getElementById('clientNames').innerHTML = options;
+                }
+            };
+            xhr.send();
+        }
 
-		function selectClient(selectedCin) {
-			document.getElementById('cin').value = selectedCin;
-			document.getElementById('clientNames').innerHTML = '';
-		}
-	</script>
+        function selectClient(selectedCin) {
+            document.getElementById('cin').value = selectedCin;
+            document.getElementById('clientNames').innerHTML = '';
+        }
+        
+        document.getElementById('addCompteForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            var cin = document.getElementById('cin').value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'CompteController?action=checkClientExistence&cin=' + encodeURIComponent(cin), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var clientExists = JSON.parse(xhr.responseText);
+                    if (!clientExists) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'The specified ID number does not exist in the database. Please create a client account.',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'clients.jsp';
+                            }
+                        });
+                    } else {
+                        document.getElementById('addCompteForm').submit(); 
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script>
 </body>
 </html>
+

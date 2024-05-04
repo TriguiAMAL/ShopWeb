@@ -85,12 +85,21 @@ public class CompteController extends HttpServlet {
 					responseBuilder.append(",");
 				}
 			}
+			
 			responseBuilder.append("]");
 
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(responseBuilder.toString());
 		}
+		
+		else if ("checkClientExistence".equals(request.getParameter("action"))) {
+			String cin = request.getParameter("cin");
+			Client client = clientService.findById(cin);
+			boolean clientExists = client != null;
+			response.getWriter().write(String.valueOf(clientExists));
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
